@@ -9,9 +9,10 @@ class CountDown {
     fun updateTime(){
         second-=frameTime
         if(second<0){
-            Game.myPathList.removeAll { true }
+            Game.gameOver=true
+
             refreshTime()
-            Game.houses.forEach{house->house.cleanAllSources()}
+
         }
 
     }

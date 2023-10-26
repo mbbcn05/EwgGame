@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import android.app.Activity
 import android.util.Log
 import babacan.Game.GameSource
 import babacan.Game.MyPath
@@ -14,7 +15,8 @@ import kotlinx.coroutines.launch
 object Game {
 
     lateinit var countDown: CountDown
-
+    lateinit var activityForAds: Activity
+    var adsOn = false
     init {
         countDown = CountDown()
 

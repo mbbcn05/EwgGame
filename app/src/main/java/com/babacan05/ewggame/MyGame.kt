@@ -1,7 +1,9 @@
 package com.example.myapplication
 
 import android.annotation.TargetApi
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
@@ -15,15 +17,34 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.startActivity
 import babacan.Game.MyPath
 import babacan.Game.MyPoint
 import com.babacan05.ewggame.GameActivity
 import com.babacan05.ewggame.R
 
+
+
+
+
+
+import com.example.myapplication.Game
+
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+
 class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
     /**
      * Holds the surface frame
      */
+
+    private var mInterstitialAd: InterstitialAd? = null
+
+
     private var holder: SurfaceHolder? = null
     private val mPaint:Paint= Paint()
     private val textPaint:Paint= Paint()
@@ -103,7 +124,7 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
         scaledHouse=Bitmap.createScaledBitmap(houseBitmap,MyGame.x/10,MyGame.y/7,true)
         scaledElectric=Bitmap.createScaledBitmap(electricBitmap,MyGame.x/10,MyGame.y/7,true)
         scaledWater=Bitmap.createScaledBitmap(waterBitmap,MyGame.x/10,MyGame.y/7,true)
-       gasBitmap=BitmapFactory.decodeResource(resources,R.drawable.gas)
+        gasBitmap=BitmapFactory.decodeResource(resources,R.drawable.gas)
         scaledGas=Bitmap.createScaledBitmap(gasBitmap,MyGame.x/10,MyGame.y/7,true)
 
 
@@ -113,10 +134,10 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
         gasBitmap.recycle()
 
         mPaint.setAntiAlias(true)
-         mPaint.setDither(true)
+        mPaint.setDither(true)
 
         mPaint.setColor(Color.argb(255, 0, 0, 10))
-         mPaint.setStyle(Paint.Style.STROKE)
+        mPaint.setStyle(Paint.Style.STROKE)
         mPaint.setStrokeWidth(3f)
 
 
@@ -125,6 +146,52 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
         textPaint.setAntiAlias(true)
 
 
+
+        funForAd()
+
+
+
+    }
+
+    private fun funForAd() {
+        val adRequest = AdRequest.Builder().build()
+
+        InterstitialAd.load(context!!, "ca-app-pub-3940256099942544/1033173712", adRequest, object : InterstitialAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                // Reklam yüklenemediğinde kullanıcıya bir hata mesajı göster
+                Log.d("TAG", adError.message)
+                mInterstitialAd = null
+            }
+
+            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                Log.d("TAG", "Reklam yüklendi.")
+                mInterstitialAd = interstitialAd
+
+                // Reklam yüklendiyse göster
+
+            }
+        })
+
+
+
+        mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
+            override fun onAdClicked() {
+                Log.d("TAG", "Reklam tıklandı.")
+            }
+
+            override fun onAdDismissedFullScreenContent() {
+                Log.d("TAG", "Reklam tam ekran içeriği kapatıldı.")
+                mInterstitialAd = null
+            }
+
+            override fun onAdImpression() {
+                Log.d("TAG", "Reklam izlenme kaydedildi.")
+            }
+
+            override fun onAdShowedFullScreenContent() {
+                Log.d("TAG", "Reklam tam ekran içeriği gösterildi.")
+            }
+        }
     }
 
     fun render(canvas: Canvas) {
@@ -141,7 +208,43 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
     }
 
     fun tick() {
-        Game.countDown.updateTime()
+
+        if(!Game.gameOver&&!Game.adsOn) {
+
+if(mInterstitialAd==null) {
+
+    Game.activityForAds.runOnUiThread {
+        // Reklam yükleme kodunu burada çalıştırın
+       funForAd()
+
+    }
+
+}
+
+            Game.countDown.updateTime()
+
+
+
+        }
+        if(Game.gameOver&&!Game.adsOn){
+Game.adsOn=true
+            Game.gameOver=false
+            Game.myPathList.removeAll { true }
+
+            Game.houses.forEach{house->house.cleanAllSources()}
+
+            Game.activityForAds.runOnUiThread {
+                // Reklam yükleme kodunu burada çalıştırın
+                mInterstitialAd?.show( Game.activityForAds)
+                mInterstitialAd = null
+
+            }
+
+
+
+
+
+        }
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
@@ -192,7 +295,7 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
             MotionEvent.ACTION_MOVE -> {
                 Game.creathingPath?.let {
                     Game.handleSourceMoving(event.x, event.y)
-
+if(Game.adsOn==true)Game.adsOn=false
 
                 }
 
@@ -294,6 +397,7 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
         /**
          * Time per frame for 60 FPS
          */
+
         var y= GameActivity.y
         var x=GameActivity.x
         private const val MAX_FRAME_TIME = (1000.0 / 20.0).toInt()
@@ -306,7 +410,7 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
     }*/
     private inline fun drawPaths(canvas: Canvas) {
 
-var list= Game.myPathList.toList()
+        var list= Game.myPathList.toList()
 
             .forEach{path->path.lines.forEach{line->canvas.drawLine(line.p1.x,line.p1.y,line.p2.x,line.p2.y,mPaint)}}
 
@@ -324,11 +428,11 @@ var list= Game.myPathList.toList()
                 canvas.drawBitmap(scaledGas,it.shape.p1.x,it.shape.p1.y,null)}
             else{
 
-                    canvas.drawBitmap(scaledElectric,it.shape.p1.x,it.shape.p1.y,null)}
-        x=x+1
+                canvas.drawBitmap(scaledElectric,it.shape.p1.x,it.shape.p1.y,null)}
+            x=x+1
 
         }
-x=1
+        x=1
     }
 
     private inline fun drawHouses(canvas: Canvas) {
