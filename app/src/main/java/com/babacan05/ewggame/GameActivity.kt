@@ -13,12 +13,12 @@ class GameActivity : AppCompatActivity() {
 
         //setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
-
+        //İntersityAd.activityForAds=this
       //  setTheme(R.style.AppTheme)
         //    gameView = MyGame(this)
         x = getResources().getDisplayMetrics().widthPixels
         y = getResources().getDisplayMetrics().heightPixels
-Game.activityForAds=this
+
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN)

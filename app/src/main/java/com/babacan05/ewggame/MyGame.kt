@@ -22,10 +22,7 @@ import babacan.Game.MyPath
 import babacan.Game.MyPoint
 import com.babacan05.ewggame.GameActivity
 import com.babacan05.ewggame.R
-
-
-
-
+import com.babacan05.ewggame.SplashActivity
 
 
 import com.example.myapplication.Game
@@ -42,7 +39,7 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
      * Holds the surface frame
      */
 
-    private var mInterstitialAd: InterstitialAd? = null
+
 
 
     private var holder: SurfaceHolder? = null
@@ -147,52 +144,13 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
 
 
 
-        funForAd()
+
 
 
 
     }
 
-    private fun funForAd() {
-        val adRequest = AdRequest.Builder().build()
 
-        InterstitialAd.load(context!!, "ca-app-pub-3940256099942544/1033173712", adRequest, object : InterstitialAdLoadCallback() {
-            override fun onAdFailedToLoad(adError: LoadAdError) {
-                // Reklam yüklenemediğinde kullanıcıya bir hata mesajı göster
-                Log.d("TAG", adError.message)
-                mInterstitialAd = null
-            }
-
-            override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                Log.d("TAG", "Reklam yüklendi.")
-                mInterstitialAd = interstitialAd
-
-                // Reklam yüklendiyse göster
-
-            }
-        })
-
-
-
-        mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-            override fun onAdClicked() {
-                Log.d("TAG", "Reklam tıklandı.")
-            }
-
-            override fun onAdDismissedFullScreenContent() {
-                Log.d("TAG", "Reklam tam ekran içeriği kapatıldı.")
-                mInterstitialAd = null
-            }
-
-            override fun onAdImpression() {
-                Log.d("TAG", "Reklam izlenme kaydedildi.")
-            }
-
-            override fun onAdShowedFullScreenContent() {
-                Log.d("TAG", "Reklam tam ekran içeriği gösterildi.")
-            }
-        }
-    }
 
     fun render(canvas: Canvas) {
         canvas.drawRGB(255,255,255)
@@ -211,15 +169,8 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
 
         if(!Game.gameOver&&!Game.adsOn) {
 
-if(mInterstitialAd==null) {
 
-    Game.activityForAds.runOnUiThread {
-        // Reklam yükleme kodunu burada çalıştırın
-       funForAd()
 
-    }
-
-}
 
             Game.countDown.updateTime()
 
@@ -227,18 +178,15 @@ if(mInterstitialAd==null) {
 
         }
         if(Game.gameOver&&!Game.adsOn){
-Game.adsOn=true
+            Game.adsOn=true
             Game.gameOver=false
             Game.myPathList.removeAll { true }
 
             Game.houses.forEach{house->house.cleanAllSources()}
+            val intent :Intent= Intent(getContext(), SplashActivity::class.java) // Ana aktiviteye geçiş yapılacak aktiviteyi belirtin
+            context?.startActivity(intent)
 
-            Game.activityForAds.runOnUiThread {
-                // Reklam yükleme kodunu burada çalıştırın
-                mInterstitialAd?.show( Game.activityForAds)
-                mInterstitialAd = null
 
-            }
 
 
 
@@ -295,7 +243,7 @@ Game.adsOn=true
             MotionEvent.ACTION_MOVE -> {
                 Game.creathingPath?.let {
                     Game.handleSourceMoving(event.x, event.y)
-if(Game.adsOn==true)Game.adsOn=false
+                    if(Game.adsOn==true)Game.adsOn=false
 
                 }
 
@@ -373,9 +321,9 @@ if(Game.adsOn==true)Game.adsOn=false
                 try {
                     synchronized(getHolder()) {
 
-                        render(canvas)
+                        render(canvas)}
                         tick()
-                    }
+                    
                 } finally {
                     getHolder().unlockCanvasAndPost(canvas)
                 }
