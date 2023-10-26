@@ -8,58 +8,55 @@ import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
 class RestartGame : AppCompatActivity() {
     private var mInterstitialAd: InterstitialAd? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
+        val adRequest = AdRequest.Builder().build()
 
-        var adRequest = AdRequest.Builder().build()
-
-        InterstitialAd.load(this,"ca-app-pub-1329781431864366/6167970488", adRequest, object : InterstitialAdLoadCallback() {
+        InterstitialAd.load(this, "YOUR_INTERSTITIAL_AD_UNIT_ID", adRequest, object : InterstitialAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
-                adError?.toString()?.let { Log.d("TAG", it) }
+                // Reklam yüklenemediğinde kullanıcıya bir hata mesajı göster
+                Log.d("TAG", adError.message)
                 mInterstitialAd = null
             }
 
             override fun onAdLoaded(interstitialAd: InterstitialAd) {
-                Log.d("TAG", "Ad was loaded.")
+                Log.d("TAG", "Reklam yüklendi.")
                 mInterstitialAd = interstitialAd
+
+                // Reklam yüklendiyse göster
+                mInterstitialAd?.show(this@RestartGame)
             }
         })
-        mInterstitialAd?.show(this)
 
         setContentView(R.layout.activity_restart_game)
 
-
-        mInterstitialAd?.fullScreenContentCallback = object: FullScreenContentCallback() {
+        mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
             override fun onAdClicked() {
-                // Called when a click is recorded for an ad.
-                Log.d("TAG", "Ad was clicked.")
+                Log.d("TAG", "Reklam tıklandı.")
             }
 
             override fun onAdDismissedFullScreenContent() {
-                // Called when ad is dismissed.
-                Log.d("TAG", "Ad dismissed fullscreen content.")
+                Log.d("TAG", "Reklam tam ekran içeriği kapatıldı.")
                 mInterstitialAd = null
             }
 
-
             override fun onAdImpression() {
-                // Called when an impression is recorded for an ad.
-                Log.d("TAG", "Ad recorded an impression.")
+                Log.d("TAG", "Reklam izlenme kaydedildi.")
             }
 
             override fun onAdShowedFullScreenContent() {
-                // Called when ad is shown.
-                Log.d("TAG", "Ad showed fullscreen content.")
+                Log.d("TAG", "Reklam tam ekran içeriği gösterildi.")
             }
         }
     }
-    }
+}
