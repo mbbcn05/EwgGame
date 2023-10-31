@@ -35,14 +35,20 @@ class SplashActivity : AppCompatActivity() {
 
        mAdView = findViewById(R.id.adView);
 myText=findViewById(R.id.textView)
-        if(splashMode) {
+        if(Ad.bannerad) {
             val adRequest = AdRequest.Builder().build();
             mAdView?.loadAd(adRequest)
-            splashMode = false
-            funForAd()
+            Ad.bannerad=false
+
+
+
         }else {
             myText.visibility=View.GONE
+
             funForAd()
+
+
+
         }
 
         // Belirli bir süre sonra ana aktiviteye geçiş yapmak için Handler kullanımı
@@ -63,7 +69,7 @@ myText=findViewById(R.id.textView)
         val adRequest = AdRequest.Builder().build()
 //teset "ca-app-pub-3940256099942544/1033173712"
         //      resmi ca-app-pub-1329781431864366/6167970488
-        InterstitialAd.load(this, "ca-app-pub-3940256099942544/1033173712", adRequest, object : InterstitialAdLoadCallback() {
+        InterstitialAd.load(this, "ca-app-pub-1329781431864366/6167970488", adRequest, object : InterstitialAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {
                 // Reklam yüklenemediğinde kullanıcıya bir hata mesajı göster
                 Log.d("TAG", adError.message)
@@ -81,9 +87,5 @@ myText=findViewById(R.id.textView)
         })
 
     }
-    companion object{
 
-        var splashMode = true
-
-    }
 }
