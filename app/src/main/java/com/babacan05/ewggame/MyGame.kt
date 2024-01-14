@@ -1,7 +1,6 @@
 package com.example.myapplication
 
 import android.annotation.TargetApi
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -9,30 +8,27 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Xfermode
+import android.graphics.RectF
 import android.os.Build
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import android.window.SplashScreen
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.startActivity
-import babacan.Game.MyPath
+
 import babacan.Game.MyPoint
+import babacan.Game.MyRectangle
+import com.babacan05.ewggame.Ad
+import com.babacan05.ewggame.AdMobInterstitial
 import com.babacan05.ewggame.GameActivity
+
+import com.babacan05.ewggame.MySplashActivity
 import com.babacan05.ewggame.R
-import com.babacan05.ewggame.SplashActivity
 
 
-import com.example.myapplication.Game
 
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.FullScreenContentCallback
-import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
 class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
     /**
@@ -45,7 +41,7 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
     private var holder: SurfaceHolder? = null
     private val mPaint:Paint= Paint()
     private val textPaint:Paint= Paint()
-
+    private val textPaint2:Paint= Paint()
     //private val gestures=GestureDetectorCompat(context,GestureListener())
     private lateinit var canvas:Canvas
     lateinit var houseBitmap:Bitmap
@@ -56,7 +52,7 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
     lateinit var waterBitmap: Bitmap
     lateinit var gasBitmap: Bitmap
     lateinit var scaledGas:Bitmap
-
+lateinit var rectButton:RectF
 
     /**
      * Draw thread
@@ -123,7 +119,7 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
         scaledWater=Bitmap.createScaledBitmap(waterBitmap,MyGame.x/10,MyGame.y/7,true)
         gasBitmap=BitmapFactory.decodeResource(resources,R.drawable.gas)
         scaledGas=Bitmap.createScaledBitmap(gasBitmap,MyGame.x/10,MyGame.y/7,true)
-
+rectButton= RectF(MyGame.x/10f,MyGame.y/7f,MyGame.x/10f,MyGame.y/7f)
 
         houseBitmap.recycle()
         electricBitmap.recycle()
@@ -141,7 +137,9 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
         textPaint.setColor(Color.argb(100, 10, 100, 10));
         textPaint.setTextSize(MyGame.x/30f)
         textPaint.setAntiAlias(true)
-
+textPaint2.setColor(Color.argb(100, 80, 100, 10));
+textPaint2.setTextSize(MyGame.x/40f)
+textPaint2.setAntiAlias(true)
 
 
 
@@ -160,9 +158,16 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
         drawSources(canvas)
 
 
-
+        drawRestartGame(canvas)
         drawCountDown(canvas)
 
+    }
+
+
+
+    private fun drawRestartGame(canvas: Canvas) {
+canvas.drawText("RESTART",MyGame.x/30f,MyGame.y/20f*19
+    ,textPaint2)
     }
 
     fun tick() {
@@ -183,8 +188,9 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
             Game.myPathList.removeAll { true }
 
             Game.houses.forEach{house->house.cleanAllSources()}
-            val intent :Intent= Intent(getContext(), SplashActivity::class.java) // Ana aktiviteye geçiş yapılacak aktiviteyi belirtin
+            val intent = Intent(getContext(), MySplashActivity::class.java) // Ana aktiviteye geçiş yapılacak aktiviteyi belirtin
             context?.startActivity(intent)
+
 
 
 
@@ -227,23 +233,30 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
         Log.d(LOGTAG, "Destroyed")
     }
 
+    @RequiresApi(Build.VERSION_CODES.S)
     override fun onTouchEvent(event: MotionEvent): Boolean {
         when (event.action) {
 
             MotionEvent.ACTION_DOWN -> {
-                Log.i("ekran boyutları","${GameActivity.x}  ${GameActivity.y}")
+
                 if (Game.creathingPath == null) Game.handleSourceSelecting(
                     MyPoint(
                         event.x,
                         event.y
                     )
                 )
+            //oyun restart yapma geçici olarak buraya eklencek
+                if(MyRectangle(MyPoint(MyGame.x/30f,MyGame.y/20f*17),MyGame.x/5f,MyGame.y/3f) .isPointInRectangle(MyPoint(event.x,event.y))){
+                    Game.countDown.second=0.02
+
+                }
+
             }
 
             MotionEvent.ACTION_MOVE -> {
                 Game.creathingPath?.let {
                     Game.handleSourceMoving(event.x, event.y)
-                    if(Game.adsOn==true)Game.adsOn=false
+                    if(Game.adsOn)Game.adsOn=false
 
                 }
 
@@ -252,7 +265,7 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
             MotionEvent.ACTION_UP -> {
 
                 Game.creathingPath?.let {
-                    Log.i("kaldırma", "kaldırma başarılı")
+
                     Game.handleHouseSelecting(MyPoint(event.x, event.y))
                 }
 
@@ -346,8 +359,10 @@ class MyGame : SurfaceView, SurfaceHolder.Callback, Runnable {
          * Time per frame for 60 FPS
          */
 
-        var y= GameActivity.y
-        var x=GameActivity.x
+        var y= 0
+        var x=0
+
+
         private const val MAX_FRAME_TIME = (1000.0 / 20.0).toInt()
         private const val LOGTAG = "surface"
     }

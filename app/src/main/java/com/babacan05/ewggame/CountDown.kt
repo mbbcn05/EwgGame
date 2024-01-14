@@ -3,7 +3,7 @@ package com.example.myapplication
 import babacan.Game.MyPath
 
 class CountDown {
-    var second:Double=10.00
+    var second:Double=60.00
 
     val frameTime=0.05
     fun updateTime(){
@@ -17,7 +17,7 @@ class CountDown {
 
     }
     fun refreshTime(){
-        second=10.00
+        second=60.00
 
     }
 }

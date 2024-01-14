@@ -1,7 +1,7 @@
 package babacan.Game
 
-import android.icu.lang.UCharacter.LineBreak
-import java.nio.file.Path
+import com.example.myapplication.Game
+import com.example.myapplication.GameHouse
 import java.util.Collections
 
 
@@ -45,5 +45,41 @@ class MyPath (val source:GameSource) {
 
   private  fun intersects(other: MyPath) = other.lines.count { line -> intersectWithLine(line) } > 0
 fun intersectsWithPaths(paths:List<MyPath>):Boolean=paths.count{path->intersects(path)}>0
+
+
+
+
+    fun isIntersectOtherHouses(gameHouse: GameHouse): Boolean {
+        var intersection=false
+        Game.houses.forEach {
+            if (it == gameHouse) {
+            } else {
+                this.lines.forEach { line ->
+                    if (it.rectangle.isPointInRectangle(line.p2)) {
+                        intersection = true
+                    }
+                }
+            }
+
+
+        }
+return intersection
+    }
+    fun isIntersectOtherSources(): Boolean {
+        var intersection=false
+        Game.sources.forEach {
+            if (it == source) {
+            } else {
+                this.lines.forEach { line ->
+                    if (it.shape.isPointInRectangle(line.p2)) {
+                        intersection = true
+                    }
+                }
+            }
+
+
+        }
+        return intersection
+    }
 
 }

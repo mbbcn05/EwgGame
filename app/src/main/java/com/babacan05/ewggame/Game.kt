@@ -1,19 +1,14 @@
 package com.example.myapplication
 
-import android.app.Activity
 import android.util.Log
-import androidx.core.app.ActivityCompat
 import babacan.Game.GameSource
 import babacan.Game.MyPath
 import babacan.Game.MyPoint
 import babacan.Game.MyRectangle
 import babacan.Game.SourceType
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
-object Game {
+object
+Game {
 
     lateinit var countDown: CountDown
 
@@ -82,21 +77,17 @@ object Game {
     fun handleHouseSelecting(point: MyPoint) {
         var houseSelecting=false
         houses.forEach {
-            if (it.rectangle.isPointInRectangle(point) &&! creathingPath!!.intersectsWithPaths(myPathList)&& it.acceptIfNotContained(creathingPath!!.source)) {
+            if (it.rectangle.isPointInRectangle(point) &&! creathingPath!!.intersectsWithPaths(myPathList)&&!creathingPath!!.isIntersectOtherHouses(it) &&!creathingPath!!.isIntersectOtherSources()&&it.acceptIfNotContained(creathingPath!!.source)) {
                 houseSelecting=true
                 creathingPath!!.apply {
 
 
 
 
-                     //clipLinesInRectangle(it.rectangle,this.source.shape)
-                    //  Log.i("houseselecting","intersection oldu")
-                    //gameOver = true
-                    //} else {
-                    Log.i("houseselecting","sounsuz pathliste eklendi")
+
                     myPathList.add(clipLinesInRectangle(it.rectangle,this.source.shape))
                     creathingPath = null
-                    countDown.refreshTime()
+                    //countDown.refreshTime()
                     return
 
 

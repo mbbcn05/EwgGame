@@ -1,6 +1,5 @@
 package com.example.myapplication
 
-import android.util.Log
 import babacan.Game.GameSource
 import babacan.Game.MyRectangle
 import babacan.Game.SourceType
@@ -17,7 +16,6 @@ class GameHouse(val rectangle: MyRectangle) {
         return notContains(source)
             .apply {
                 if (this) {
-                    Log.i("houseselecting", "sorunsuz house kabul ettti")
                     accept(source)
                 }
 

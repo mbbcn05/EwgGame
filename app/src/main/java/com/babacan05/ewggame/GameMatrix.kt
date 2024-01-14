@@ -17,7 +17,7 @@ object GameMatrix {
     var isIntersection:Boolean=false
 
     private fun addLine(a:Int,b:Int,c:Int,d:Int){
-        Log.i("addline","addline çalıştı.")
+
         matrix[a][b]=1
         matrix[c][d]=1
         x=a
@@ -37,7 +37,7 @@ object GameMatrix {
             }
             if(matrix[x][y]==2.toByte()) {
                 isIntersection=true
-                Log.i("KESİŞME!!","BİR ADET KESİŞME")
+
             }
 
         }

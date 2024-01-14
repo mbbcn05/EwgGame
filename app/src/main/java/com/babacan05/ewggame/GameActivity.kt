@@ -1,23 +1,34 @@
 package com.babacan05.ewggame
 
-import android.app.Activity
+
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+
 import android.view.WindowManager
-import com.example.myapplication.Game
+import androidx.annotation.RequiresApi
+
+import com.example.myapplication.MyGame
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.initialization.InitializationStatus
 
 class GameActivity : AppCompatActivity() {
-    // private lateinit var gameView: MyGame
+    //private lateinit var gameView: MyGame
 
+    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
 
         //setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         //İntersityAd.activityForAds=this
-      //  setTheme(R.style.AppTheme)
-        //    gameView = MyGame(this)
-        x = getResources().getDisplayMetrics().widthPixels
-        y = getResources().getDisplayMetrics().heightPixels
+        //  setTheme(R.style.AppTheme)
+
+
+       MyGame.x = getResources().getDisplayMetrics().widthPixels
+       MyGame.y = getResources().getDisplayMetrics().heightPixels
+
+
+        //gameView = MyGame(this)
 
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -25,10 +36,10 @@ class GameActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_game)
     }
-    companion object{
 
-        var x:Int=0
-        var y:Int=0
+    override fun onBackPressed() {
 
     }
+
 }
+
