@@ -12,7 +12,7 @@ android {
         applicationId = "com.babacan05.ewggame"
         minSdk = 24
         targetSdk = 34
-        versionCode = 5
+        versionCode = 7
         versionName = "2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -68,7 +68,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation ("androidx.navigation:navigation-compose:2.7.6")
 
 
