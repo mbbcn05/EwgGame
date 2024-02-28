@@ -184,7 +184,7 @@ canvas.drawText("RESTART",MyGame.x/30f,MyGame.y/20f*19
         if(Game.gameOver&&!Game.adsOn){
             Game.adsOn=true
             Game.gameOver=false
-            Game.myPathList.removeAll { true }
+          //  Game.myPathList.removeAll { true }      NORMALDE BU ÇALIŞIYODU
 
             Game.houses.forEach{house->house.cleanAllSources()}
             val intent = Intent(getContext(), MainActivity::class.java) // Ana aktiviteye geçiş yapılacak aktiviteyi belirtin
@@ -232,50 +232,6 @@ canvas.drawText("RESTART",MyGame.x/30f,MyGame.y/20f*19
         Log.d(LOGTAG, "Destroyed")
     }
 
-    @RequiresApi(Build.VERSION_CODES.S)
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        when (event.action) {
-
-            MotionEvent.ACTION_DOWN -> {
-
-                if (Game.creathingPath == null) Game.handleSourceSelecting(
-                    MyPoint(
-                        event.x,
-                        event.y
-                    )
-                )
-            //oyun restart yapma geçici olarak buraya eklencek
-                if(MyRectangle(MyPoint(MyGame.x/30f,MyGame.y/20f*17),MyGame.x/5f,MyGame.y/3f) .isPointInRectangle(MyPoint(event.x,event.y))){
-                    Game.countDown.second=0.02
-
-                }
-
-            }
-
-            MotionEvent.ACTION_MOVE -> {
-                Game.creathingPath?.let {
-                    Game.handleSourceMoving(event.x, event.y)
-                    if(Game.adsOn)Game.adsOn=false
-
-                }
-
-            }
-
-            MotionEvent.ACTION_UP -> {
-
-                Game.creathingPath?.let {
-
-                    Game.handleHouseSelecting(MyPoint(event.x, event.y))
-                }
-
-
-            }
-
-
-
-        }
-        return true
-    }
 
     /**
      * Stops the drawing thread
@@ -363,7 +319,7 @@ canvas.drawText("RESTART",MyGame.x/30f,MyGame.y/20f*19
 
 
         private const val MAX_FRAME_TIME = (1000.0 / 20.0).toInt()
-        private const val LOGTAG = "surface"
+        const val LOGTAG = "surface"
     }
 
     /*private inline fun drawPaths(canvas: Canvas) {
@@ -372,9 +328,9 @@ canvas.drawText("RESTART",MyGame.x/30f,MyGame.y/20f*19
     }*/
     private inline fun drawPaths(canvas: Canvas) {
 
-        var list= Game.myPathList.toList()
+       // var list= Game.myPathList.toList()  QQ
 
-            .forEach{path->path.lines.forEach{line->canvas.drawLine(line.p1.x,line.p1.y,line.p2.x,line.p2.y,mPaint)}}
+       //     .forEach{path->path.lines.forEach{line->canvas.drawLine(line.p1.x,line.p1.y,line.p2.x,line.p2.y,mPaint)}}
 
 
 
