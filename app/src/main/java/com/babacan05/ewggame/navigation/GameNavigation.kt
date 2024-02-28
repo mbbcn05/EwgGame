@@ -1,6 +1,8 @@
 package com.babacan05.ewggame.navigation
 
+import android.os.Build
 import androidx.activity.ComponentActivity
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,10 +34,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.babacan05.ewggame.Ad
 import com.babacan05.ewggame.AdMobBanner
+import com.babacan05.ewggame.GameCanvas.GameCanvasScreen
 import com.babacan05.ewggame.R
-import com.babacan05.ewggame.openGameActivity
 
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun GameNavigation(context:ComponentActivity){
 
@@ -49,8 +52,8 @@ fun GameNavigation(context:ComponentActivity){
 
         composable(route="splash screen"){
 
-            MainScreen(context =context )
-
+         //   MainScreen(context =context )
+          GameCanvasScreen()
 
 
 
@@ -70,7 +73,9 @@ fun GameNavigation(context:ComponentActivity){
 fun MainScreen(context: ComponentActivity, modifier: Modifier = Modifier ){
 
 
-Box (contentAlignment = Alignment.Center, modifier=modifier.background(color = Color.Cyan).fillMaxSize()){
+Box (contentAlignment = Alignment.Center, modifier= modifier
+    .background(color = Color.Cyan)
+    .fillMaxSize()){
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center, modifier = modifier) {
         AdMobBanner()
       Row (horizontalArrangement =Arrangement.Center, verticalAlignment =Alignment.CenterVertically, modifier =Modifier.fillMaxWidth()){
@@ -87,7 +92,7 @@ Box (contentAlignment = Alignment.Center, modifier=modifier.background(color = C
                   Ad.showAd()
               } else {
                   Ad.loadadAd()
-                  openGameActivity(context = context)
+                 // openGameActivity(context = context)
               }
 
 

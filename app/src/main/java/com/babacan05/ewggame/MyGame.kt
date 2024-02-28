@@ -22,9 +22,8 @@ import babacan.Game.MyPoint
 import babacan.Game.MyRectangle
 import com.babacan05.ewggame.Ad
 import com.babacan05.ewggame.AdMobInterstitial
-import com.babacan05.ewggame.GameActivity
+import com.babacan05.ewggame.MainActivity
 
-import com.babacan05.ewggame.MySplashActivity
 import com.babacan05.ewggame.R
 
 
@@ -188,7 +187,7 @@ canvas.drawText("RESTART",MyGame.x/30f,MyGame.y/20f*19
             Game.myPathList.removeAll { true }
 
             Game.houses.forEach{house->house.cleanAllSources()}
-            val intent = Intent(getContext(), MySplashActivity::class.java) // Ana aktiviteye geçiş yapılacak aktiviteyi belirtin
+            val intent = Intent(getContext(), MainActivity::class.java) // Ana aktiviteye geçiş yapılacak aktiviteyi belirtin
             context?.startActivity(intent)
 
 

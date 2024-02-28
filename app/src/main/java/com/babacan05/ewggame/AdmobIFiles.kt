@@ -81,14 +81,14 @@ class AdMobInterstitial(private val activity: Activity) {
                     super.onAdDismissedFullScreenContent()
                     mInterstitialAd = null
                     loadAd()
-                    openGameActivity(context)
+                  //  openGameActivity(context)
                     //Toast.makeText(context, "dismissed", Toast.LENGTH_SHORT).show()
                 }
 
                 override fun onAdFailedToShowFullScreenContent(p0: AdError) {
                     super.onAdFailedToShowFullScreenContent(p0)
                     mInterstitialAd = null
-                    openGameActivity(context)
+                //    openGameActivity(context)
                     //Toast.makeText(context, "failed", Toast.LENGTH_SHORT).show()
                 }
 
@@ -105,9 +105,4 @@ class AdMobInterstitial(private val activity: Activity) {
            // loadAd()
         }
     }
-}
-fun openGameActivity(context: ComponentActivity){
-    val intent = Intent(context, GameActivity::class.java) // Ana aktiviteye geçiş yapılacak aktiviteyi belirtin
-    context.startActivity(intent)
-
 }

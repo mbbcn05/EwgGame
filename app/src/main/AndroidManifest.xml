@@ -20,7 +20,7 @@
             android:value="ca-app-pub-1329781431864366~3297759986" />
 
         <activity
-            android:name=".MySplashActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:hardwareAccelerated="true"
             android:launchMode="singleInstance"
@@ -31,11 +31,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".GameActivity"
-            android:exported="true"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="landscape" />
+
     </application>
 
 
