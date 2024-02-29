@@ -4,19 +4,16 @@ import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.RectF
-import android.util.Log
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.RectangleShape
 import babacan.Game.GameSource
+import babacan.Game.MyLine
 import babacan.Game.MyPath
 import babacan.Game.MyPoint
 import babacan.Game.MyRectangle
 import babacan.Game.SourceType
 import com.babacan05.ewggame.MainActivity
 import com.babacan05.ewggame.R
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 
 object Game {
 
@@ -54,9 +51,8 @@ object Game {
     }
 
     var creathingPath: MyPath? = null
-    private val _myPathList = MutableStateFlow<MutableList<MyPath>>(mutableListOf())
-    val myPathList: StateFlow<MutableList<MyPath>> = _myPathList
-    //val myPathList: MutableList<MyPath> = mutableListOf()
+
+    val myPathList: MutableList<MyPath> = mutableListOf()
     var gameOver = false
 
     val houses: List<GameHouse> = listOf(
@@ -68,7 +64,7 @@ object Game {
     val sources: List<GameSource> = listOf(
         GameSource(
             MyRectangle(MyPoint(x / 8f, y - 3 * y / 7f)),
-            SourceType.ELECTRIC
+            SourceType.ELECTRIC,
         ),
         GameSource(
             MyRectangle(
@@ -100,23 +96,32 @@ println("creathing path null değil")
         }
     }
 
-    fun handleSourceMoving(x: Float, y: Float) {
+    fun handleSourceMoving(x: Float, y: Float, creathingLines: SnapshotStateList<MyLine>) {
 
-        creathingPath?.addLines(x, y)
+        creathingPath?.let { it.addLines(x, y,creathingLines)
+
+
+        }
 
     }
 
-    fun handleHouseSelecting(offset: Offset) {
+    fun handleHouseSelecting(
+        offset: Offset,
+        paths: SnapshotStateList<MyPath>,
+        creathingLines: SnapshotStateList<MyLine>
+    ) {
 
         var houseSelecting=false
         houses.forEach {
-            if (it.rectangle.rect.contains(offset) &&! creathingPath!!.intersectsWithPaths(_myPathList.value)&&!creathingPath!!.isIntersectOtherHouses(it) &&!creathingPath!!.isIntersectOtherSources()&&it.acceptIfNotContained(creathingPath!!.source)) {
+            if (it.rectangle.rect.contains(offset) &&! creathingPath!!.intersectsWithPaths(myPathList)&&!creathingPath!!.isIntersectOtherHouses(it) &&!creathingPath!!.isIntersectOtherSources()&&it.acceptIfNotContained(creathingPath!!.source)) {
                 houseSelecting=true
                 println("house başarıyla seçildi")
                 creathingPath!!.apply {
-                   // myPathList.add(clipLinesInRectangle(it.rectangle,this.source.shape))
-                    _myPathList.value.add(clipLinesInRectangle(it.rectangle,this.source.shape))
+                   val clippingPath=clipLinesInRectangle(it.rectangle,this.source.shape)
+                    myPathList.add(clippingPath)
+                    paths.add(clippingPath)
                     creathingPath = null
+                    creathingLines.clear()
                     //countDown.refreshTime()
                     return
                 }
@@ -124,6 +129,7 @@ println("creathing path null değil")
         }
         if(!houseSelecting){
             creathingPath=null
+            creathingLines.clear()
         }
 
     }

@@ -1,19 +1,21 @@
 package babacan.Game
 
+import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.ui.geometry.Offset
 import com.example.myapplication.Game
 import com.example.myapplication.GameHouse
-import java.util.Collections
 
 
 class MyPath (val source:GameSource) {
-    var lines = Collections.synchronizedList(mutableListOf<MyLine>())
-    var point: MyPoint? = null
+   // var lines = Collections.synchronizedList(mutableListOf<MyLine>())
+    var lines= mutableListOf<MyLine>()
+    var point: Offset? = null
     fun clipLinesInRectangle(rectangle: MyRectangle, rectangle2: MyRectangle): MyPath {
 
         val removingLines = mutableListOf<MyLine>()
         lines.forEach { line ->
-            if (rectangle.isPointInRectangle(line.p1) && rectangle.isPointInRectangle(line.p2) ||
-                rectangle2.isPointInRectangle(line.p1) && rectangle2.isPointInRectangle(line.p2)
+            if (rectangle.rect.contains(line.p1) && rectangle.rect.contains(line.p2) ||
+                rectangle2.rect.contains(line.p1) && rectangle2.rect.contains(line.p2)
             ) {
                 removingLines.add(line)
             }
@@ -30,18 +32,19 @@ class MyPath (val source:GameSource) {
         return path
     }
 
-    fun addLines(x: Float, y: Float) {
+    fun addLines(x: Float, y: Float, creathingLines: SnapshotStateList<MyLine>) {
 
         if (point != null) {
-            lines.add(MyLine(point!!, MyPoint(x, y)))
-
+            val addinLine=MyLine(point!!, Offset(x, y))
+            lines.add(addinLine)
+creathingLines.add(addinLine)
         }
-        point = MyPoint(x, y)
+        point = Offset(x, y)
     }
 
 
    private fun intersectWithLine(line: MyLine): Boolean =
-        lines.count { ln -> doLinesIntersect(ln.p1, ln.p2,line.p1,line.p2) } > 0
+        lines.count { ln -> doIntersect(ln.p1, ln.p2,line.p1,line.p2) } > 0
 
   private  fun intersects(other: MyPath) = other.lines.count { line -> intersectWithLine(line) } > 0
 fun intersectsWithPaths(paths:List<MyPath>):Boolean=paths.count{path->intersects(path)}>0
@@ -55,7 +58,7 @@ fun intersectsWithPaths(paths:List<MyPath>):Boolean=paths.count{path->intersects
             if (it == gameHouse) {
             } else {
                 this.lines.forEach { line ->
-                    if (it.rectangle.isPointInRectangle(line.p2)) {
+                    if (it.rectangle.rect.contains(line.p2)) {
                         intersection = true
                     }
                 }
@@ -71,7 +74,7 @@ return intersection
             if (it == source) {
             } else {
                 this.lines.forEach { line ->
-                    if (it.shape.isPointInRectangle(line.p2)) {
+                    if (it.shape.rect.contains(line.p2)) {
                         intersection = true
                     }
                 }

@@ -1,6 +1,8 @@
 package babacan.Game
 
-class MyLine (val p1:MyPoint, val p2:MyPoint){
+import androidx.compose.ui.geometry.Offset
+
+class MyLine (val p1:Offset, val p2: Offset){
 
 
 

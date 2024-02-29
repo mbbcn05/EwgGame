@@ -28,7 +28,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
         x = resources.displayMetrics.widthPixels
        y = resources.displayMetrics.heightPixels
 
