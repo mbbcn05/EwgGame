@@ -6,7 +6,7 @@ import com.example.myapplication.Game
 import com.example.myapplication.GameHouse
 
 
-class MyPath (val source:GameSource) {
+class MyPath (val source:GameSource,val game:Game) {
    // var lines = Collections.synchronizedList(mutableListOf<MyLine>())
     var lines= mutableListOf<MyLine>()
     var point: Offset? = null
@@ -25,7 +25,7 @@ class MyPath (val source:GameSource) {
 
 
         }
-        val path = MyPath(source)
+        val path = MyPath(source,game)
         val newLines=lines.toMutableList()
         newLines.removeAll(removingLines)
         path.lines = newLines
@@ -54,7 +54,7 @@ fun intersectsWithPaths(paths:List<MyPath>):Boolean=paths.count{path->intersects
 
     fun isIntersectOtherHouses(gameHouse: GameHouse): Boolean {
         var intersection=false
-        Game.houses.forEach {
+        game.houses.forEach {
             if (it == gameHouse) {
             } else {
                 this.lines.forEach { line ->
@@ -70,7 +70,7 @@ return intersection
     }
     fun isIntersectOtherSources(): Boolean {
         var intersection=false
-        Game.sources.forEach {
+        game.sources.forEach {
             if (it == source) {
             } else {
                 this.lines.forEach { line ->

@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.WindowManager
 
 import androidx.activity.ComponentActivity
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 
@@ -14,10 +13,7 @@ import com.babacan05.ewggame.navigation.GameNavigation
 
 
 import com.babacan05.ewggame.theme.EwgTheme
-import com.example.myapplication.Game
-import com.example.myapplication.MyGame
-import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.ads.initialization.InitializationStatus
+
 
 
 class MainActivity : ComponentActivity() {
@@ -52,10 +48,12 @@ class MainActivity : ComponentActivity() {
         setContent {
 
     EwgTheme{
+        val showInterstitialAdCallback: () -> Unit = {
+            showInterstitialAd(this)
+        }
 
 
-
-        GameNavigation(this)
+        GameNavigation(showInterstitialAdCallback)
 
 
     }

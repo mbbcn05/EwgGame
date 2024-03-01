@@ -12,6 +12,7 @@ import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.example.myapplication.Game
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
@@ -19,7 +20,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 
 
-
+var showAd: () -> Unit = {  }
 @Composable
 fun AdMobBanner() {
     val currentWidth = LocalConfiguration.current.screenWidthDp
@@ -51,58 +52,22 @@ fun AdBanner() {
 }
 
 
+fun showInterstitialAd(activity: Activity) {
+    InterstitialAd.load(
+        activity,
+        "ca-app-pub-1329781431864366/6167970488", //Change this with your own AdUnitID!
+        AdRequest.Builder().build(),
+        object : InterstitialAdLoadCallback() {
+            override fun onAdFailedToLoad(adError: LoadAdError) {
 
-
-
-class AdMobInterstitial(private val activity: Activity) {
-    var mInterstitialAd: InterstitialAd? = null
-    private val context = activity.applicationContext
-    fun loadAd() {
-        val adUnitId = context.getString(R.string.interstitial_ad_unit_id)
-        val adRequest = AdRequest.Builder().build()
-
-        InterstitialAd.load(context, adUnitId, adRequest, object : InterstitialAdLoadCallback() {
-            override fun onAdFailedToLoad(p0: LoadAdError) {
-                mInterstitialAd = null
-                Ad.institialad=false
             }
 
-            override fun onAdLoaded(ad: InterstitialAd) {
-                mInterstitialAd = ad
-                Ad.institialad=true
-                //Toast.makeText(context, "add loaded", Toast.LENGTH_SHORT).show()
+            override fun onAdLoaded(interstitialAd: InterstitialAd) {
+          showAd={interstitialAd.show(activity)}
+
             }
-        })
-    }
-    fun showAdd(context:ComponentActivity) {
-        if (mInterstitialAd != null) {
-            mInterstitialAd?.fullScreenContentCallback = object : FullScreenContentCallback() {
-                override fun onAdDismissedFullScreenContent() {
-                    super.onAdDismissedFullScreenContent()
-                    mInterstitialAd = null
-                    loadAd()
-                  //  openGameActivity(context)
-                    //Toast.makeText(context, "dismissed", Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onAdFailedToShowFullScreenContent(p0: AdError) {
-                    super.onAdFailedToShowFullScreenContent(p0)
-                    mInterstitialAd = null
-                //    openGameActivity(context)
-                    //Toast.makeText(context, "failed", Toast.LENGTH_SHORT).show()
-                }
-
-                override fun onAdShowedFullScreenContent() {
-                    super.onAdShowedFullScreenContent()
-                    //openGameActivity(context)
-
-                    // Toast.makeText(context, "showed", Toast.LENGTH_SHORT).show()
-                }
-            }
-            mInterstitialAd?.show(activity)
-            loadAd()
-        } else {
-           // loadAd()
         }
-    }
+    )
 }
+
+

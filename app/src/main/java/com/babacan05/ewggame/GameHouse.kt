@@ -18,17 +18,20 @@ class GameHouse(val rectangle: MyRectangle) {
                 if (this) {
                     accept(source)
                 }
-
-
             }
+
     }
 
     fun cleanAllSources(){
+        println("SİLİNDİ")
+        sourceMap.clear()
 
-        sourceMap.put(SourceType.ELECTRIC, null)
-        sourceMap.put(SourceType.GAS, null)
-        sourceMap.put(SourceType.WATER, null)
-
+    }
+    fun IsNotFilled() : Boolean{
+        return !sourceMap.keys.containsAll(listOf(SourceType.ELECTRIC,SourceType.WATER,SourceType.GAS))
+    }
+    fun getSourceTypes():List<SourceType>{
+        return sourceMap.keys.toMutableList()
     }
 
 }
