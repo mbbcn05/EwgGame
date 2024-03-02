@@ -1,5 +1,6 @@
 package com.example.myapplication
 
+import androidx.compose.runtime.MutableState
 import babacan.Game.GameSource
 import babacan.Game.MyRectangle
 import babacan.Game.SourceType
@@ -12,12 +13,13 @@ class GameHouse(val rectangle: MyRectangle) {
 
     private fun accept(source: GameSource) = sourceMap.put(source.type, source)
 
-    fun acceptIfNotContained(source: GameSource): Boolean {
+    fun acceptIfNotContained(source: GameSource, beSame: MutableState<Boolean>): Boolean {
         return notContains(source)
             .apply {
                 if (this) {
                     accept(source)
-                }
+
+                }else  beSame.value=true
             }
 
     }

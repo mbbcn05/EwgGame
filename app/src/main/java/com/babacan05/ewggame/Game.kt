@@ -83,12 +83,14 @@ gameState.value=gameState.value.copy(lightingSources = listOf(it), colorSource =
         paths: SnapshotStateList<MyPath>,
         creathingLines: SnapshotStateList<MyLine>,
         gameState: MutableState<GameState>,
-        succes: MutableState<Boolean>
+        succes: MutableState<Boolean>,
+        intersect: MutableState<Boolean>,
+        beSame: MutableState<Boolean>
     ) {
 
         var houseSelecting=false
         houses.forEach {
-            if (it.rectangle.rect.contains(offset) &&! creathingPath!!.intersectsWithPaths(myPathList)&&!creathingPath!!.isIntersectOtherHouses(it) &&!creathingPath!!.isIntersectOtherSources()&&it.acceptIfNotContained(creathingPath!!.source)) {
+            if (it.rectangle.rect.contains(offset) &&! creathingPath!!.intersectsWithPaths(myPathList,intersect)&&!creathingPath!!.isIntersectOtherHouses(it,intersect) &&!creathingPath!!.isIntersectOtherSources(intersect)&&it.acceptIfNotContained(creathingPath!!.source,beSame)) {
                 houseSelecting=true
                 println("house başarıyla seçildi")
                 creathingPath!!.apply {

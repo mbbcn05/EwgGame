@@ -1,5 +1,6 @@
 package babacan.Game
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.geometry.Offset
 import com.example.myapplication.Game
@@ -47,12 +48,15 @@ creathingLines.add(addinLine)
         lines.count { ln -> doIntersect(ln.p1, ln.p2,line.p1,line.p2) } > 0
 
   private  fun intersects(other: MyPath) = other.lines.count { line -> intersectWithLine(line) } > 0
-fun intersectsWithPaths(paths:List<MyPath>):Boolean=paths.count{path->intersects(path)}>0
+fun intersectsWithPaths(
+    paths: List<MyPath>,
+    intersect: MutableState<Boolean>
+):Boolean=(paths.count{ path->intersects(path)}>0).apply { if(this) intersect.value=true }
 
 
 
 
-    fun isIntersectOtherHouses(gameHouse: GameHouse): Boolean {
+    fun isIntersectOtherHouses(gameHouse: GameHouse, intersect: MutableState<Boolean>): Boolean {
         var intersection=false
         game.houses.forEach {
             if (it == gameHouse) {
@@ -60,6 +64,7 @@ fun intersectsWithPaths(paths:List<MyPath>):Boolean=paths.count{path->intersects
                 this.lines.forEach { line ->
                     if (it.rectangle.rect.contains(line.p2)) {
                         intersection = true
+                        intersect.value=true
                     }
                 }
             }
@@ -68,7 +73,7 @@ fun intersectsWithPaths(paths:List<MyPath>):Boolean=paths.count{path->intersects
         }
 return intersection
     }
-    fun isIntersectOtherSources(): Boolean {
+    fun isIntersectOtherSources(intersect: MutableState<Boolean>): Boolean {
         var intersection=false
         game.sources.forEach {
             if (it == source) {
@@ -76,6 +81,7 @@ return intersection
                 this.lines.forEach { line ->
                     if (it.shape.rect.contains(line.p2)) {
                         intersection = true
+                        intersect.value=true
                     }
                 }
             }

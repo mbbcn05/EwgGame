@@ -9,10 +9,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -52,17 +53,33 @@ fun GameCanvasScreen(
     game: Game,
     navigate: () -> Unit
 ) {
-    var gameState =remember{
+    val gameState =remember{
         mutableStateOf(GameState(lightingSources =game.sources))
     }
-    var succes = remember{
+    val succes = remember{
         mutableStateOf(false)
     }
-LaunchedEffect(key1 = succes.value){
-    if (succes.value){
-    delay(500)
-    succes.value=false}
+    val intersect = remember{
+        mutableStateOf(false)
+    }
+    val beSame = remember{
+        mutableStateOf(false)
+    }
+LaunchedEffect(key1 = intersect.value){
+    if (intersect.value){
+    delay(1000)
+        intersect.value=false}
 }
+    LaunchedEffect(key1 = beSame.value){
+        if (beSame.value){
+            delay(750)
+            beSame.value=false}
+    }
+    LaunchedEffect(key1 = succes.value){
+        if (succes.value){
+            delay(500)
+            succes.value=false}
+    }
     var lastOffset by remember { mutableStateOf(Offset.Zero) }
 
     var gameOver by remember {
@@ -81,8 +98,8 @@ LaunchedEffect(key1 = succes.value){
 
 
     Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Black.copy(alpha = 0.3f))
+        .fillMaxSize().background(Color.White)
+        .background(Color.Black.copy(alpha = 0.1f))
 
             ) {
 
@@ -103,7 +120,7 @@ LaunchedEffect(key1 = succes.value){
                     },
                     onDragEnd = {
                         if (!gameOver && game.creathingPath != null) game.handleHouseSelecting(
-                            lastOffset, paths, creathingLines, gameState, succes
+                            lastOffset, paths, creathingLines, gameState, succes,intersect,beSame
                         )
                     },
                     onDrag = { change, dragAmount ->
@@ -131,14 +148,26 @@ LaunchedEffect(key1 = succes.value){
 
                 drawSources(this,game)
         }
-        AnimatedVisibility(visible = gameOver,modifier=Modifier.align(Alignment.Center)) {
-            Text(fontWeight = FontWeight.ExtraBold,color= Color.Red,text = "GAME OVER", modifier = Modifier, fontSize = 100.sp)
+        AnimatedVisibility(visible = gameOver,modifier=Modifier.align(Alignment.Center).background(Color.LightGray.copy(alpha = 0.4f),
+            RoundedCornerShape(20.dp)
+        )) {
+            Text(fontWeight = FontWeight.ExtraBold,color= Color.Red,text = "GAME OVER", fontSize = 100.sp)
+        }
+        AnimatedVisibility(visible = beSame.value,modifier=Modifier.align(Alignment.Center).background(Color.LightGray.copy(alpha = 0.4f),
+            RoundedCornerShape(20.dp)
+        )) {
+            Text(fontWeight = FontWeight.ExtraBold,color= Color.Red,text = "DON'T BE SAME!", fontSize = 80.sp)
+        }
+        AnimatedVisibility(visible = intersect.value,modifier=Modifier.align(Alignment.Center).background(Color.LightGray.copy(alpha = 0.4f),
+            RoundedCornerShape(20.dp)
+        )) {
+            Text(fontWeight = FontWeight.ExtraBold,color= Color.Red,text = "DON'T İNTERSECT!", modifier = Modifier, fontSize = 80.sp)
         }
         AnimatedVisibility(visible = succes.value, modifier = Modifier
             .align(Alignment.Center)
             .size(250.dp)) {
             Icon(painter = painterResource(id = R.drawable.checktrue), contentDescription ="")
-            //succes.value=false
+
         }
 
         if(!gameOver) {
@@ -167,25 +196,30 @@ LaunchedEffect(key1 = succes.value){
             }
         }
 
+
+        Text(fontWeight = FontWeight.Bold,fontSize = 25.sp, text = number.value.toString(), modifier = Modifier.align(Alignment.TopStart).padding(2.dp)
+            .background(Color.Red.copy(alpha = 0.6f), RoundedCornerShape(20.dp)))
+
+       OutlinedButton(onClick ={
+            if(number.value<50) showAd()
+
+            navigate()
+
+
+
+        },modifier=Modifier.align(Alignment.BottomStart)){
+            Text(text = "Restart")
+        }
     }
     LaunchedEffect(number.value,gameOver){
        if(!gameOver) {delay(1000)
         number.value=number.value-1
-        if(number.value<0){
+        if(number.value<1){
             gameOver=true
         }
     }}
-    Text(text = number.value.toString())
-    Button(onClick ={
-        if(number.value<50) showAd()
-
-        navigate()
 
 
-
-          },modifier=Modifier.offset(2.dp,320.dp)){
-        Text(text = "Restart")
-    }
 
 }
 
@@ -231,7 +265,7 @@ fun drawCreatgingLines(
 
 
     creathingLines.toList().forEach{line->drawScope.drawLine(Color.Green,Offset(line.p1.x,line.p1.y),
-        Offset(line.p2.x,line.p2.y), pathEffect = PathEffect.cornerPathEffect(5f), cap = StrokeCap.Round, strokeWidth =15f)}
+        Offset(line.p2.x,line.p2.y), pathEffect = PathEffect.cornerPathEffect(5f), cap = StrokeCap.Round, strokeWidth =10f)}
 
 
 }
