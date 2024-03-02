@@ -27,7 +27,7 @@ fun AdMobBanner() {
         factory = {
             AdView(it).apply {
                 setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, currentWidth))
-                adUnitId = "ca-app-pub-1329781431864366/7299829579"
+                adUnitId = "**************************"
                 loadAd(AdRequest.Builder().build())
             }
         }
@@ -39,7 +39,7 @@ fun AdMobBanner() {
 fun AdBanner() {
     val adView = AdView(LocalContext.current)
     adView.setAdSize(AdSize.BANNER)
-    adView.adUnitId = "ca-app-pub-1329781431864366/7299829579" // AdMob'dan aldığınız Banner Ad Unit ID
+    adView.adUnitId = "*******************************" // AdMob'dan aldığınız Banner Ad Unit ID
 
     AndroidView(
         modifier = Modifier.fillMaxSize(),
