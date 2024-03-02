@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">EWGGAME</string>
-    <string name="banner_ad_unit_id">ca-app-pub-1329781431864366/7299829579</string>
+    <string name="banner_ad_unit_id">*******************</string>
     <string name="title_activity_main2">MainActivity2</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -44,7 +44,7 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-    <string name="interstitial_ad_unit_id">ca-app-pub-1329781431864366/6167970488</string>
+    <string name="interstitial_ad_unit_id">****************************</string>
 
 
     <string name="ad_unit_id">ca-app-pub-1329781431864366/7299829579</string>
