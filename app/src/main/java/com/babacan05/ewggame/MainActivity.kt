@@ -1,7 +1,6 @@
 package com.babacan05.ewggame
 
 
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -10,11 +9,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 
-import com.babacan05.ewggame.navigation.GameNavigation
+import com.babacan05.ewggame.presentation.GameNavigation
 
 
 import com.babacan05.ewggame.theme.EwgTheme
-
+import com.babacan05.ewggame.utilities.MyMediaPlayer
+import com.babacan05.ewggame.utilities.showInterstitialAd
 
 
 class MainActivity : ComponentActivity() {
@@ -40,8 +40,7 @@ class MainActivity : ComponentActivity() {
             showInterstitialAd(this)
         }
 
-
-
+val mediaPlayer= MyMediaPlayer(this)
 
 
         setContent {
@@ -50,7 +49,9 @@ class MainActivity : ComponentActivity() {
 
 
 
-        GameNavigation(showInterstitialAdCallback)
+        GameNavigation(mediaPlayer = mediaPlayer,
+            showInterstitialAdCallback = showInterstitialAdCallback
+        )
 
 
     }

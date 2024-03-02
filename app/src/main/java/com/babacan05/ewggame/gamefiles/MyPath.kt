@@ -7,7 +7,7 @@ import babacan.Game.GameSource
 import babacan.Game.doIntersect
 
 
-class MyPath (val source: GameSource, val game: Game) {
+class MyPath (val source: GameSource, val game: GameLogic) {
    // var lines = Collections.synchronizedList(mutableListOf<MyLine>())
     var lines= mutableListOf<MyLine>()
     var point: Offset? = null
