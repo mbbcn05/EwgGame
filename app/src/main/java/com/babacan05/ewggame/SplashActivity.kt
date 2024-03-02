@@ -88,9 +88,9 @@ class MySplashActivity : ComponentActivity() {
 
         /*** fun funForAd() {
         val adRequest = AdRequest.Builder().build()
-        //teset "ca-app-pub-3940256099942544/1033173712"
-        //      resmi ca-app-pub-1329781431864366/6167970488
-        InterstitialAd.load(this, "ca-app-pub-1329781431864366/6167970488", adRequest, object : InterstitialAdLoadCallback() {
+        //teset "***"
+        //      resmi***
+        InterstitialAd.load(this, "*******", adRequest, object : InterstitialAdLoadCallback() {
         override fun onAdFailedToLoad(adError: LoadAdError) {
         // Reklam yüklenemediğinde kullanıcıya bir hata mesajı göster
         Log.d("TAG", adError.message)
