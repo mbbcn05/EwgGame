@@ -1,6 +1,7 @@
 package com.babacan05.ewggame
 
 
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
@@ -35,11 +36,9 @@ class MainActivity : ComponentActivity() {
 
 
 
-
-
-
-
-
+        val showInterstitialAdCallback: () -> Unit = {
+            showInterstitialAd(this)
+        }
 
 
 
@@ -48,9 +47,7 @@ class MainActivity : ComponentActivity() {
         setContent {
 
     EwgTheme{
-        val showInterstitialAdCallback: () -> Unit = {
-            showInterstitialAd(this)
-        }
+
 
 
         GameNavigation(showInterstitialAdCallback)

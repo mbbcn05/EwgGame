@@ -18,8 +18,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,12 +31,11 @@ import androidx.navigation.compose.composable
 
 import androidx.navigation.compose.rememberNavController
 import com.babacan05.ewggame.AdMobBanner
-import com.babacan05.ewggame.GameBitmaps
+import com.babacan05.ewggame.gamefiles.GameBitmaps
 import com.babacan05.ewggame.gamecanvas.GameCanvasScreen
-import com.babacan05.ewggame.GameChanger
+import com.babacan05.ewggame.gamefiles.GameChanger
 import com.babacan05.ewggame.R
-import com.babacan05.ewggame.gamecanvas.GameState
-import com.example.myapplication.Game
+import com.babacan05.ewggame.gamefiles.Game
 
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -56,7 +53,7 @@ fun GameNavigation( showInterstitialAdCallback: () -> Unit){
 
         composable(route="game screen"){
 
-           GameCanvasScreen(game=GameChanger.game) { navController.navigate("start screen"){
+           GameCanvasScreen(game= GameChanger.game) { navController.navigate("start screen"){
                popUpTo("game screen") {
                    inclusive = true
                }
@@ -67,6 +64,7 @@ fun GameNavigation( showInterstitialAdCallback: () -> Unit){
         composable(route="start screen"){
             
 MainScreen({navController.navigate("game screen"){
+
     popUpTo("start screen") {
         inclusive = true
     }
@@ -87,11 +85,13 @@ fun MainScreen(
 
 
     ){
+
 val context= LocalContext.current
+
     GameBitmaps.density=context.resources.displayMetrics.density
     loadAd()
 LaunchedEffect(true){
-    GameChanger.game=Game()
+    GameChanger.game= Game()
 
    // GameChanger.game.loadBitmaps(context.resources)
 if(!GameBitmaps.bitmapsLoaded){

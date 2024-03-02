@@ -1,6 +1,7 @@
 package com.babacan05.ewggame.gamecanvas
 
 import BlinkingRectangleEffect
+import android.media.MediaPlayer
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
@@ -18,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -31,18 +33,19 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import babacan.Game.GameSource
-import babacan.Game.MyLine
-import babacan.Game.MyPath
-import com.babacan05.ewggame.GameBitmaps
+import com.babacan05.ewggame.gamefiles.MyLine
+import com.babacan05.ewggame.gamefiles.MyPath
+import com.babacan05.ewggame.gamefiles.GameBitmaps
 import com.babacan05.ewggame.R
 import com.babacan05.ewggame.showAd
-import com.example.myapplication.Game
-import com.example.myapplication.GameHouse
+import com.babacan05.ewggame.gamefiles.Game
+import com.babacan05.ewggame.gamefiles.GameHouse
 import kotlinx.coroutines.delay
 
 
@@ -53,6 +56,10 @@ fun GameCanvasScreen(
     game: Game,
     navigate: () -> Unit
 ) {
+  val context= LocalContext.current
+    val successMusic=MediaPlayer.create(context,R.raw.success)
+
+    
     val gameState =remember{
         mutableStateOf(GameState(lightingSources =game.sources))
     }
@@ -67,7 +74,7 @@ fun GameCanvasScreen(
     }
 LaunchedEffect(key1 = intersect.value){
     if (intersect.value){
-    delay(1000)
+    delay(750)
         intersect.value=false}
 }
     LaunchedEffect(key1 = beSame.value){
@@ -91,14 +98,15 @@ LaunchedEffect(key1 = intersect.value){
         mutableStateListOf<MyLine>()
     }
     val number=remember {
-        mutableStateOf(60)
+        mutableIntStateOf(60)
     }
 
 
 
 
     Box(modifier = Modifier
-        .fillMaxSize().background(Color.White)
+        .fillMaxSize()
+        .background(Color.White)
         .background(Color.Black.copy(alpha = 0.1f))
 
             ) {
@@ -120,8 +128,11 @@ LaunchedEffect(key1 = intersect.value){
                     },
                     onDragEnd = {
                         if (!gameOver && game.creathingPath != null) game.handleHouseSelecting(
-                            lastOffset, paths, creathingLines, gameState, succes,intersect,beSame
-                        )
+                            lastOffset, paths, creathingLines, gameState, succes, intersect, beSame
+
+
+                        ) {
+                        }
                     },
                     onDrag = { change, dragAmount ->
                         if (!gameOver) {
@@ -140,27 +151,36 @@ LaunchedEffect(key1 = intersect.value){
             }) {
 
 
-            drawPaths(this,paths,game)
-            drawCreatgingLines(this,creathingLines,game)
+            drawPaths(this, paths)
+            drawCreatgingLines(this, creathingLines)
                 drawHouses(this,game)
 
 
 
                 drawSources(this,game)
         }
-        AnimatedVisibility(visible = gameOver,modifier=Modifier.align(Alignment.Center).background(Color.LightGray.copy(alpha = 0.4f),
-            RoundedCornerShape(20.dp)
-        )) {
+        AnimatedVisibility(visible = gameOver,modifier= Modifier
+            .align(Alignment.Center)
+            .background(
+                Color.LightGray.copy(alpha = 0.4f),
+                RoundedCornerShape(20.dp)
+            )) {
             Text(fontWeight = FontWeight.ExtraBold,color= Color.Red,text = "GAME OVER", fontSize = 100.sp)
         }
-        AnimatedVisibility(visible = beSame.value,modifier=Modifier.align(Alignment.Center).background(Color.LightGray.copy(alpha = 0.4f),
-            RoundedCornerShape(20.dp)
-        )) {
+        AnimatedVisibility(visible = beSame.value,modifier= Modifier
+            .align(Alignment.Center)
+            .background(
+                Color.LightGray.copy(alpha = 0.4f),
+                RoundedCornerShape(20.dp)
+            )) {
             Text(fontWeight = FontWeight.ExtraBold,color= Color.Red,text = "DON'T BE SAME!", fontSize = 80.sp)
         }
-        AnimatedVisibility(visible = intersect.value,modifier=Modifier.align(Alignment.Center).background(Color.LightGray.copy(alpha = 0.4f),
-            RoundedCornerShape(20.dp)
-        )) {
+        AnimatedVisibility(visible = intersect.value,modifier= Modifier
+            .align(Alignment.Center)
+            .background(
+                Color.LightGray.copy(alpha = 0.4f),
+                RoundedCornerShape(20.dp)
+            )) {
             Text(fontWeight = FontWeight.ExtraBold,color= Color.Red,text = "DON'T İNTERSECT!", modifier = Modifier, fontSize = 80.sp)
         }
         AnimatedVisibility(visible = succes.value, modifier = Modifier
@@ -197,8 +217,10 @@ LaunchedEffect(key1 = intersect.value){
         }
 
 
-        Text(fontWeight = FontWeight.Bold,fontSize = 25.sp, text = number.value.toString(), modifier = Modifier.align(Alignment.TopStart).padding(2.dp)
-            .background(Color.Red.copy(alpha = 0.6f), RoundedCornerShape(20.dp)))
+        Text(fontWeight = FontWeight.Bold,fontSize = 25.sp, text = number.value.toString(), modifier = Modifier
+            .align(Alignment.TopStart)
+            .padding(2.dp)
+            .background(Color.Red.copy(alpha = 0.2f), RoundedCornerShape(20.dp)))
 
        OutlinedButton(onClick ={
             if(number.value<50) showAd()
@@ -210,11 +232,12 @@ LaunchedEffect(key1 = intersect.value){
         },modifier=Modifier.align(Alignment.BottomStart)){
             Text(text = "Restart")
         }
+
     }
-    LaunchedEffect(number.value,gameOver){
+    LaunchedEffect(number.intValue,gameOver){
        if(!gameOver) {delay(1000)
-        number.value=number.value-1
-        if(number.value<1){
+        number.intValue=number.intValue-1
+        if(number.intValue<1){
             gameOver=true
         }
     }}
@@ -229,7 +252,7 @@ fun drawSources(drawScope: DrawScope, game: Game) {
     game.sources.forEach {
         val imageBitmap = when (x) {
             2 -> GameBitmaps.scaledWater
-            3 ->GameBitmaps. scaledGas
+            3 -> GameBitmaps. scaledGas
             else -> GameBitmaps.scaledElectric
         }
 
@@ -258,8 +281,7 @@ fun drawHouses(drawScope: DrawScope, game: Game) {
 fun drawCreatgingLines(
     drawScope: DrawScope,
 
-    creathingLines: SnapshotStateList<MyLine>,
-    game: Game
+    creathingLines: SnapshotStateList<MyLine>
 ){
 
 
@@ -272,8 +294,7 @@ fun drawCreatgingLines(
 
 fun drawPaths(
     drawScope: DrawScope,
-    paths: SnapshotStateList<MyPath>,
-    game: Game
+    paths: SnapshotStateList<MyPath>
 ){
 
 
@@ -293,7 +314,7 @@ fun drawPaths(
             }
 
         }}
-data class GameState(val lightingHouses:List<GameHouse> = emptyList(), val lightingSources:List<GameSource> =emptyList(),val colorSource:Color= Color.White ,val colorHouse:Color= Color.White)
+data class GameState(val lightingHouses:List<GameHouse> = emptyList(), val lightingSources:List<GameSource> =emptyList(), val colorSource:Color= Color.White, val colorHouse:Color= Color.White)
 
 
 

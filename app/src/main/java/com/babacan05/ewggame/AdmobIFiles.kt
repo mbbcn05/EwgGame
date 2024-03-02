@@ -7,14 +7,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 
 import com.google.android.gms.ads.*
 import android.app.Activity
-import android.content.Intent
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.example.myapplication.Game
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
@@ -40,7 +36,7 @@ fun AdMobBanner() {
 fun AdBanner() {
     val adView = AdView(LocalContext.current)
     adView.setAdSize(AdSize.BANNER)
-    adView.adUnitId = "ca-app-pub-1329781431864366/7299829579" // AdMob'dan aldığınız Banner Ad Unit ID
+    adView.adUnitId = "ca-app-pub-1329781431864366/7299829579"
 
     AndroidView(
         modifier = Modifier.fillMaxSize(),
@@ -55,7 +51,7 @@ fun AdBanner() {
 fun showInterstitialAd(activity: Activity) {
     InterstitialAd.load(
         activity,
-        "ca-app-pub-1329781431864366/6167970488", //Change this with your own AdUnitID!
+        "ca-app-pub-1329781431864366/6167970488",
         AdRequest.Builder().build(),
         object : InterstitialAdLoadCallback() {
             override fun onAdFailedToLoad(adError: LoadAdError) {

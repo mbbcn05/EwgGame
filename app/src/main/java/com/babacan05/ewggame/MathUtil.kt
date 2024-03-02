@@ -1,14 +1,13 @@
 package babacan.Game
 
-import android.graphics.Path
-import android.util.Log
 import androidx.compose.ui.geometry.Offset
+import com.babacan05.ewggame.gamefiles.MyLine
 import kotlin.math.max
 import kotlin.math.min
 
 fun Int.abs() =Math.abs(this)
 fun doLinesIntersect(line1: MyLine, line2: MyLine): Boolean {
-    // İki çizgiyi temsil eden başlangıç ve bitiş noktalarını alın
+
     val x1 = line1.p1.x
     val y1 = line1.p1.y
     val x2 = line1.p2.x
@@ -20,9 +19,9 @@ fun doLinesIntersect(line1: MyLine, line2: MyLine): Boolean {
     val x4 = line2.p2.x
     val y4 = line2.p2.y
 
-    // Çizgilerin sonuçlarına göre kesişip kesişmediğini kontrol edin
+
     if (x1 > x4 || x2 < x3 || y1 > y4 || y2 < y3) {
-        // Çizgiler hiçbir noktada kesişmiyor
+
         return false
     }
 
@@ -36,13 +35,13 @@ fun doLinesIntersect(line1Start: Offset, line1End: Offset, line2Start: Offset, l
     val denominator = (line1End.y - line1Start.y) * (line2End.x - line2Start.x) - (line1End.x - line1Start.x) * (line2End.y - line2Start.y)
 
     if (denominator == 0f) {
-        return false // Lines are parallel, no intersection
+        return false
     }
 
     val ua = ((line2End.x - line2Start.x) * (line1Start.y - line2Start.y) - (line2End.y - line2Start.y) * (line1Start.x - line2Start.x)) / denominator
     val ub = ((line1End.x - line1Start.x) * (line1Start.y - line2Start.y) - (line1End.y - line1Start.y) * (line1Start.x - line2Start.x)) / denominator
 
-    val epsilon = 1e-5f // tolerance value for floating point comparison
+    val epsilon = 1e-5f
 
     return (ua >= -epsilon && ua <= 1f + epsilon && ub >= -epsilon && ub <= 1f + epsilon)
 }
